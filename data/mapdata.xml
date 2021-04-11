@@ -1,0 +1,94 @@
+<map name="basic">
+    <maps>
+      <floor name="default" outside="x">
+          <data>
+            xxxxxxxxxxxxxxxxxxxxxxx
+            xxxxxxx.....xxxxxxxxxxx
+            xxxxxxxxxxx.xxxxxxxxxxx
+            xxxxxxxxxxx.xxxxxxxxxxx
+            xxx...............xxxxx
+            xxx.xxxxxxxxxxx.xxxxxxx
+            xxx.xxxxxxxxxxx.....xxx
+            xxxxxxxxxxxxxxxxxxxxxxx
+          </data>
+          <layer name="height" type="int" outside="4">
+            43210000220000000001234
+            43210000220000000001234
+            43222222222022222222234
+            43222222222222222222234
+            43200000220000000001234
+            43200000220000000001234
+            43200000220000000000234
+            43210000220000000001234
+          </layer>
+          <layer name="terrain" type="terrain" outside="x">
+            xxxxxxxxxxxxxxxxxxxxxxx
+            xxxxxxx.....xxxxxxxxxxx
+            xxxxxxxxxxx.xxxxxxxxxxx
+            xxxxxxxxxxx.xxxxxxxxxxx
+            xxx...............xxxxx
+            xxx.xxxxxxxxxxx.xxxxxxx
+            xxx.xxxxxxxxxxx.....xxx
+            xxxxxxxxxxxxxxxxxxxxxxx
+          </layer>
+          <triggers>
+              <on_place x='7' y='1'>
+                  <move_to x='7' y='1' d="2" map="underground" />
+              </on_place>
+              <on_place x='3' y='6'>
+                  <move_to x='3' y='6' d="1" map="underground" />
+              </on_place>
+              <on_place x='19' y='6'>
+                  <move_to x='19' y='6' d="3" map="underground" />
+              </on_place>
+              <on_place x="11" y="4">
+                  <show_text>Crossroads</show_text>
+              </on_place>
+          </triggers>
+      </floor>
+      <floor name="underground" outside="x">
+          <data>
+            xxxxxxxxxxxxxxxxxxxxxxx
+            xxxxxxx.xxxxxxxxxxxxxxx
+            xxxxxxx.xxxxxxxxxxxxxxx
+            xxxxxxx.xxxxxxxxxxxxxxx
+            xxxxxxx..xxxxxxxxxxxxxx
+            xxxxxxx.xxxxxxxxxxxxxxx
+            xxx.................xxx
+            xxxxxxxxxxxxxxxxxxxxxxx
+          </data>
+            <triggers>
+              <on_place x='7' y='1'>
+                  <move_to x='7' y='1' d="1" map="default" />
+              </on_place>
+              <on_place x='3' y='6'>
+                  <move_to x='3' y='6' d="0" map="default" />
+              </on_place>
+              <on_place x='19' y='6'>
+                  <move_to x='19' y='6' d="3" map="default" />
+              </on_place>
+          </triggers>
+      </floor>
+
+    </maps>
+
+    <terrain name="wall"
+             key="x"
+             color="(0, 100, 100)"
+             free="false"
+    />
+    <terrain key="."
+             name="free"
+             color="(100, 100, 100)"
+             free="true"
+    />
+
+    <player x="8" y="1" d="1" map="default" />
+    <enemies>
+        <!--<enemy x="8" y="4" d="1" />-->
+        <!--<enemy x="10" y="4" d="1" />-->
+        <!--<enemy x="13" y="4" d="3" />-->
+        <!--<enemy x="17" y="4" d="3" />-->
+    </enemies>
+
+</map>

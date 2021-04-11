@@ -1,0 +1,190 @@
+<?xml version="1.0" ?>
+<graphics>
+	<file path="warriorF.png" transparent="top_left">
+		<img key="war_0_0" rect="(4, 2, 26, 52)" pt="(12, 46)"/>
+		<img key="war_0_1" rect="(38, 2, 22, 52)" pt="(10, 46)"/>
+		<img key="war_0_2" rect="(70, 2, 21, 52)" pt="(10, 46)"/>
+		<img key="war_0_3" rect="(101, 2, 21, 50)" pt="(10, 44)"/>
+		<img key="war_0_4" rect="(132, 1, 26, 52)" pt="(12, 46)"/>
+		<img key="war_1_0" rect="(6, 58, 24, 52)" pt="(11, 46)"/>
+		<img key="war_1_1" rect="(35, 57, 25, 51)" pt="(12, 45)"/>
+		<img key="war_1_2" rect="(69, 57, 23, 50)" pt="(11, 44)"/>
+		<img key="war_1_3" rect="(103, 58, 21, 49)" pt="(10, 43)"/>
+		<img key="war_1_4" rect="(134, 57, 24, 50)" pt="(11, 44)"/>
+		<img key="war_1_5" rect="(165, 57, 25, 51)" pt="(12, 45)"/>
+		<img key="war_2_0" rect="(5, 114, 22, 51)" pt="(10, 45)"/>
+		<img key="war_2_1" rect="(35, 113, 26, 52)" pt="(12, 46)"/>
+		<img key="war_2_2" rect="(66, 113, 28, 52)" pt="(13, 46)"/>
+		<img key="war_2_3" rect="(99, 114, 25, 51)" pt="(12, 45)"/>
+		<img key="war_2_4" rect="(133, 113, 23, 50)" pt="(11, 44)"/>
+		<img key="war_2_5" rect="(165, 113, 24, 50)" pt="(11, 44)"/>
+		<img key="war_6_0" rect="(6, 370, 22, 52)" pt="(10, 46)"/>
+		<img key="war_6_1" rect="(36, 370, 24, 52)" pt="(11, 46)"/>
+		<img key="war_6_2" rect="(66, 375, 23, 46)" pt="(11, 40)"/>
+		<img key="war_6_3" rect="(106, 375, 23, 46)" pt="(11, 40)"/>
+		<img key="war_7_0" rect="(5, 426, 20, 50)" pt="(9, 44)"/>
+		<img key="war_7_1" rect="(37, 425, 20, 51)" pt="(9, 45)"/>
+		<img key="war_7_2" rect="(65, 431, 26, 46)" pt="(12, 40)"/>
+		<img key="war_7_3" rect="(105, 431, 26, 46)" pt="(12, 40)"/>
+		<img key="war_14_0" rect="(4, 770, 32, 49)" pt="(15, 43)"/>
+		<img key="war_14_1" rect="(43, 770, 35, 52)" pt="(17, 46)"/>
+		<img key="war_14_2" rect="(82, 770, 37, 52)" pt="(18, 46)"/>
+		<img key="war_14_3" rect="(122, 770, 37, 52)" pt="(18, 46)"/>
+		<img key="war_14_4" rect="(162, 770, 37, 52)" pt="(18, 46)"/>
+		<img key="war_15_0" rect="(8, 827, 26, 49)" pt="(12, 43)"/>
+		<img key="war_15_1" rect="(47, 827, 28, 50)" pt="(13, 44)"/>
+		<img key="war_15_2" rect="(86, 826, 30, 51)" pt="(14, 45)"/>
+		<img key="war_15_3" rect="(126, 826, 30, 51)" pt="(14, 45)"/>
+		<img key="war_15_4" rect="(166, 826, 30, 51)" pt="(14, 45)"/>
+	</file>
+    <file path="jennifer.png" transparent="top_left">
+		<img key="jen_0_0" rect="(6, 3, 24, 50)" pt="(11, 44)"/>
+		<img key="jen_0_1" rect="(38, 2, 25, 52)" pt="(12, 46)"/>
+		<img key="jen_0_2" rect="(69, 2, 26, 53)" pt="(12, 47)"/>
+		<img key="jen_0_3" rect="(102, 2, 23, 51)" pt="(11, 45)"/>
+		<img key="jen_0_4" rect="(134, 2, 23, 51)" pt="(11, 45)"/>
+		<img key="jen_1_0" rect="(6, 58, 25, 52)" pt="(12, 46)"/>
+		<img key="jen_1_1" rect="(35, 57, 28, 51)" pt="(13, 45)"/>
+		<img key="jen_1_2" rect="(69, 57, 26, 50)" pt="(12, 44)"/>
+		<img key="jen_1_3" rect="(103, 58, 23, 49)" pt="(11, 43)"/>
+		<img key="jen_1_4" rect="(133, 57, 24, 50)" pt="(11, 44)"/>
+		<img key="jen_1_5" rect="(164, 57, 26, 51)" pt="(12, 45)"/>
+		<img key="jen_2_0" rect="(6, 114, 23, 51)" pt="(11, 45)"/>
+		<img key="jen_2_1" rect="(36, 113, 25, 51)" pt="(12, 45)"/>
+		<img key="jen_2_2" rect="(68, 113, 25, 51)" pt="(12, 45)"/>
+		<img key="jen_2_3" rect="(102, 114, 23, 49)" pt="(11, 43)"/>
+		<img key="jen_2_4" rect="(133, 113, 23, 50)" pt="(11, 44)"/>
+		<img key="jen_2_5" rect="(166, 113, 22, 50)" pt="(10, 44)"/>
+		<img key="jen_14_0" rect="(4, 770, 31, 49)" pt="(15, 43)"/>
+		<img key="jen_14_1" rect="(42, 770, 35, 52)" pt="(17, 46)"/>
+		<img key="jen_14_2" rect="(82, 770, 36, 52)" pt="(17, 46)"/>
+		<img key="jen_14_3" rect="(122, 770, 37, 52)" pt="(18, 46)"/>
+		<img key="jen_14_4" rect="(162, 770, 37, 52)" pt="(18, 46)"/>
+		<img key="jen_15_0" rect="(8, 827, 28, 51)" pt="(13, 45)"/>
+		<img key="jen_15_1" rect="(47, 827, 30, 51)" pt="(14, 45)"/>
+		<img key="jen_15_2" rect="(86, 827, 32, 51)" pt="(15, 45)"/>
+		<img key="jen_15_3" rect="(126, 827, 32, 51)" pt="(15, 45)"/>
+		<img key="jen_15_4" rect="(166, 827, 32, 51)" pt="(15, 45)"/>
+		<img key="jen_16_0" rect="(3, 883, 27, 51)" pt="(13, 45)"/>
+		<img key="jen_16_1" rect="(34, 886, 29, 48)" pt="(14, 42)"/>
+		<img key="jen_16_2" rect="(66, 885, 29, 49)" pt="(14, 43)"/>
+		<img key="jen_16_3" rect="(98, 885, 29, 49)" pt="(14, 43)"/>
+		<img key="jen_16_4" rect="(130, 883, 27, 50)" pt="(13, 44)"/>
+		<img key="jen_16_5" rect="(162, 886, 27, 47)" pt="(13, 41)"/>
+		<img key="jen_16_6" rect="(194, 885, 27, 48)" pt="(13, 42)"/>
+		<img key="jen_16_7" rect="(226, 885, 27, 48)" pt="(13, 42)"/>
+	</file>
+    <sprite key="war" type="animated">
+        <mode>stand</mode>
+        <mode>walk</mode>
+        <mode>block</mode>
+        <mode>aim</mode>
+        <loop key="stand_f" looped="True">
+            <frame t="1000" key="war_0_1" />
+            <frame t="1000" key="war_0_1" />
+        </loop>
+        <loop key="stand_r" looped="True">
+            <frame t="1000" key="war_0_3" />
+            <frame t="1000" key="war_0_3" />
+        </loop>
+
+        <loop key="walk_f" looped="True">
+            <frame t="200" key="war_1_0" />
+            <frame t="200" key="war_1_1" />
+            <frame t="200" key="war_1_2" />
+            <frame t="200" key="war_1_3" />
+            <frame t="200" key="war_1_4" />
+            <frame t="200" key="war_1_5" />
+        </loop>
+            <loop key="walk_r" looped="True">
+            <frame t="200" key="war_2_0" />
+            <frame t="200" key="war_2_1" />
+            <frame t="200" key="war_2_2" />
+            <frame t="200" key="war_2_3" />
+            <frame t="200" key="war_2_4" />
+            <frame t="200" key="war_2_5" />
+        </loop>
+            <loop key="aim_f">
+            <frame t="200" key="war_14_0" />
+            <frame t="200" key="war_14_1" />
+            <frame t="200" key="war_14_2" />
+            <frame t="200" key="war_14_3" />
+            <frame t="200" key="war_14_4" />
+        </loop>
+            <loop key="aim_r">
+            <frame t="200" key="war_15_0" />
+            <frame t="200" key="war_15_1" />
+            <frame t="200" key="war_15_2" />
+            <frame t="200" key="war_15_3" />
+            <frame t="200" key="war_15_4" />
+        </loop>
+            <loop key="block_f">
+            <frame t="200" key="war_6_0" />
+            <frame t="200" key="war_6_1" />
+            <frame t="200" key="war_6_2" />
+            <frame t="200" key="war_6_3" />
+        </loop>
+            <loop key="block_r">
+            <frame t="200" key="war_7_0" />
+            <frame t="200" key="war_7_1" />
+            <frame t="200" key="war_7_2" />
+            <frame t="200" key="war_7_3" />
+        </loop>
+    </sprite>
+    <sprite key="jen" type="animated">
+        <mode>stand</mode>
+        <mode>walk</mode>
+        <mode>block</mode>
+        <mode>aim</mode>
+        <loop key="stand_f" looped="True">
+            <frame t="1000" key="jen_0_1" />
+            <frame t="1000" key="jen_0_1" />
+        </loop>
+        <loop key="stand_r" looped="True">
+            <frame t="1000" key="jen_0_3" />
+            <frame t="1000" key="jen_0_3" />
+        </loop>
+        <loop key="walk_f" looped="True">
+            <frame t="200" key="jen_1_0" />
+            <frame t="200" key="jen_1_1" />
+            <frame t="200" key="jen_1_2" />
+            <frame t="200" key="jen_1_3" />
+            <frame t="200" key="jen_1_4" />
+            <frame t="200" key="jen_1_5" />
+        </loop>
+        <loop key="walk_r" looped="True">
+            <frame t="200" key="jen_2_0" />
+            <frame t="200" key="jen_2_1" />
+            <frame t="200" key="jen_2_2" />
+            <frame t="200" key="jen_2_3" />
+            <frame t="200" key="jen_2_4" />
+            <frame t="200" key="jen_2_5" />
+        </loop>
+        <loop key="block_f">
+            <frame t="200" key="jen_14_0" />
+            <frame t="200" key="jen_14_1" />
+            <frame t="200" key="jen_14_2" />
+            <frame t="200" key="jen_14_3" />
+            <frame t="200" key="jen_14_4" />
+        </loop>
+            <loop key="block_r">
+            <frame t="200" key="jen_15_0" />
+            <frame t="200" key="jen_15_1" />
+            <frame t="200" key="jen_15_2" />
+            <frame t="200" key="jen_15_3" />
+            <frame t="200" key="jen_15_4" />
+        </loop>
+            <loop key="aim_f">
+            <frame t="200" key="jen_16_0" />
+            <frame t="200" key="jen_16_1" />
+            <frame t="200" key="jen_16_2" />
+            <frame t="600" key="jen_16_3" />
+        </loop>
+            <loop key="aim_r">
+            <frame t="200" key="jen_16_4" />
+            <frame t="200" key="jen_16_5" />
+            <frame t="200" key="jen_16_6" />
+            <frame t="600" key="jen_16_7" />
+        </loop>
+    </sprite>
+</graphics>
