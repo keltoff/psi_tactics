@@ -2,6 +2,7 @@ from enum import Enum, auto
 from collections import namedtuple
 import battle_logic as bl
 from map_gui import MapGui, Event
+from animations import ScriptWalk, ScriptAttack, ScriptSpin
 
 class MapScreen:
     def __init__(self, game_window):
@@ -52,7 +53,7 @@ class MapScreen:
             print(f'Action: {action}')
             if action.is_a(MapGui.EV_MOVE):
                 if bl.check_move_legal(action):
-                    self.gui.play_animation('Move', action.player, action.pos)
+                    self.gui.play_animation(ScriptWalk(action.player, action.path))
 
                     new_pos = action.pos
                     new_pos.dir = action.player.pos.dir
@@ -68,7 +69,7 @@ class MapScreen:
 
                     effect = bl.process_attack(shooter, target)
 
-                    self.gui.play_animation('Attack', shooter, target, effect)
+                    self.gui.play_animation(ScriptAttack(shooter, target, effect))
 
                     bl.apply_attack(effect, shooter, target)
                 else:
@@ -97,7 +98,7 @@ class MapScreen:
         for npc in npcs:
             if npc.visible:
                 self.gui.focus(npc)
-                self.gui.play_animation('Emote', npc, 'Spin')
+                self.gui.play_animation(ScriptSpin(npc))
 
         done = False
         return done

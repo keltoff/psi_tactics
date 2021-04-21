@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from math import inf
 import pygame
 from collections import namedtuple
 from widgets import Event, CharacterOrganizer, CharacterDisplay, KeyBinder, MapWrapper
@@ -9,6 +10,7 @@ from tile_map.graphics.storage import Storage
 from tile_map.data_types.position import Position as Pos
 from tile_map.geometry.topology import *
 from tile_map.gui import Gui
+from animations import Script
 
 
 class MapGuiEvents(Enum):
@@ -128,7 +130,12 @@ class MapGui:
                         if Pos.same_place(hl_event.pos, self.cmd_target):
                             self.target_path.positions.clear()
                             self.cmd_target = None
-                            return Event(self.EV_MOVE, player=player, pos=hl_event.pos)
+
+                            target_pos = Position(hl_event.pos.x, hl_event.pos.y, hl_event.pos.z, Flat4.dir_to(player.pos, hl_event.pos))
+                            #TODO should be less clumsy
+
+                            return Event(self.EV_MOVE, player=player, pos=hl_event.pos,
+                                         path=Flat4.find_path(player.pos, target_pos))
                         else:
                             self.target_path.positions = Flat4.find_path(player.pos, hl_event.pos)
                             self.target_path.border = pygame.Color('orange') # (255, 150, 0)
@@ -154,73 +161,18 @@ class MapGui:
         # widgets.map.set_focus(object.pos)
         self.map_widget.focus(object)
 
-    def play_animation(self, animation_type, *actors):
-        pass
-        # clock = pygame.time.Clock()
-        #
-        # # do main loop
-        # while True:
-        #     self._draw_()
-        #     time_elapsed = clock.tick(15)
-        #
-        #     for char in self.char_display.characters.pcs:
-        #         char.update(time_elapsed)
+    def play_animation(self, animation: Script):
+        clock = pygame.time.Clock()
 
+        # do main loop
+        while not animation.done():
+            self._draw_()
+            time_elapsed = clock.tick(15)
 
-class Script:
-    def __init__(self, type, **params):
-        self.type = type
-        self.params = params
-        self.t = 0
+            animation.update(time_elapsed)
 
-    def update(self, time):
-        self.t += time
+            for char in self.char_display.characters.pcs:
+                char.update(time_elapsed)
 
-    def done(self):
-        return True
-
-    def wait(self, time):
-        pass
-
-
-class ScriptSin(Script):
-    def __init__(self, actor):
-        super().__init__('Puppet')
-        self.actor = actor
-
-    def update(self, time):
-        super().update(time)
-
-    def play_out(self):
-        self.actor.set_mode('spin')
-
-        self.wait(1000)
-
-        self.actor.set_mode('stand')
-
-
-class ScriptAttack(Script):
-    def __init__(self, actor, target):
-        super().__init__('Puppet')
-        self.actor = actor
-        self.target = target
-
-    def update(self, time):
-        super().update(time)
-
-    def play_out(self):
-        self.actor.pos.dir = geometry.dir_towards(self.actor.pos, self.target.pos)
-        self.actor.set_mode('aim')
-
-        self.wait(500)
-
-        add_effect('Beam', self.actor, self.target)
-        self.target.set_mode('is_hit')
-
-        self.wait(500)
-
-        self.actor.set_mode('stand')
-        self.target.set_mode('stand')
-        # remove_effect ??
 
 
