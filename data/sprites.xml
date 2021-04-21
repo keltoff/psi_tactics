@@ -6,7 +6,7 @@
 		<img key="war_0_2" rect="(70, 2, 21, 52)" pt="(10, 46)"/>
 		<img key="war_0_3" rect="(101, 2, 21, 50)" pt="(10, 44)"/>
 		<img key="war_0_4" rect="(132, 1, 26, 52)" pt="(12, 46)"/>
-		<img key="war_1_0" rect="(6, 58, 24, 52)" pt="(11, 46)"/>
+        <img key="war_1_0" rect="(6, 58, 24, 52)" pt="(11, 46)"/>
 		<img key="war_1_1" rect="(35, 57, 25, 51)" pt="(12, 45)"/>
 		<img key="war_1_2" rect="(69, 57, 23, 50)" pt="(11, 44)"/>
 		<img key="war_1_3" rect="(103, 58, 21, 49)" pt="(10, 43)"/>
@@ -36,6 +36,12 @@
 		<img key="war_15_2" rect="(86, 826, 30, 51)" pt="(14, 45)"/>
 		<img key="war_15_3" rect="(126, 826, 30, 51)" pt="(14, 45)"/>
 		<img key="war_15_4" rect="(166, 826, 30, 51)" pt="(14, 45)"/>
+
+        <img key="red_0" rect="(516, 2, 26, 52)" pt="(12, 46)"/>
+		<img key="red_1" rect="(550, 2, 22, 52)" pt="(10, 46)"/>
+		<img key="red_2" rect="(582, 2, 21, 52)" pt="(10, 46)"/>
+		<img key="red_3" rect="(613, 2, 21, 50)" pt="(10, 44)"/>
+		<img key="red_4" rect="(644, 1, 26, 52)" pt="(12, 46)"/>
 	</file>
     <file path="jennifer.png" transparent="top_left">
 		<img key="jen_0_0" rect="(6, 3, 24, 50)" pt="(11, 44)"/>
@@ -185,6 +191,17 @@
             <frame t="200" key="jen_16_5" />
             <frame t="200" key="jen_16_6" />
             <frame t="600" key="jen_16_7" />
+        </loop>
+    </sprite>
+    <sprite key="red" type="animated">
+        <mode>stand</mode>
+        <loop key="stand_f" looped="True">
+            <frame t="1000" key="red_1" />
+            <frame t="1000" key="red_1" />
+        </loop>
+        <loop key="stand_r" looped="True">
+            <frame t="1000" key="red_3" />
+            <frame t="1000" key="red_3" />
         </loop>
     </sprite>
 </graphics>

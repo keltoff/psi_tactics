@@ -106,6 +106,9 @@ class CharacterOrganizer:
     def add_pc(self, character):
         self.pcs.append(character)
 
+    def add_npc(self, npc):
+        self.npcs.append(npc)
+
     @property
     def current_pc(self):
         if len(self.pcs) <= self.current:
@@ -125,6 +128,9 @@ class CharacterOrganizer:
 
     def nps_at_pos(self, pos):
         return next((npc for npc in self.npcs if npc.pos.same_place(pos)), None)
+
+    def all_characters(self):
+        return self.pcs + self.npcs
 
 
 class CharacterDisplay(Widget):

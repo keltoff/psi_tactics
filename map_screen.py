@@ -52,6 +52,8 @@ class MapScreen:
             print(f'Action: {action}')
             if action.is_a(MapGui.EV_MOVE):
                 if bl.check_move_legal(action):
+                    self.gui.play_animation('Move', action.player, action.pos)
+
                     new_pos = action.pos
                     new_pos.dir = action.player.pos.dir
                     action.player.pos = new_pos  # action.pos
