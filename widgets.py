@@ -129,6 +129,14 @@ class CharacterOrganizer:
     def nps_at_pos(self, pos):
         return next((npc for npc in self.npcs if npc.pos.same_place(pos)), None)
 
+    def sprite_at_pos(self, pos):
+        npc = next((npc for npc in self.npcs if npc.pos.same_place(pos)), None)
+        if npc:
+            return npc
+        else:
+            return next((pc for pc in self.pcs if pc.pos.same_place(pos)), None)
+
+
     def all_characters(self):
         return self.pcs + self.npcs
 
@@ -145,6 +153,48 @@ class CharacterDisplay(Widget):
         pygame.draw.rect(surface, pygame.Color('White'), self.area, 1)
 
         character.draw(surface, Pt(self.area.centerx, self.area.bottom - 20, dir=Dir(1)))
+
+
+pygame.font.init()
+
+class TargetDisplay(Widget):
+    def __init__(self, area):
+        super().__init__(area)
+
+        self.target_pos = None
+        self.target = None
+
+        self.font = pygame.font.SysFont('Comic Sans MS', 20)
+
+    def draw(self, surface):
+        # if self.target_pos is None:
+        #     return
+
+        # draw ground
+
+        # draw object
+        target = self.target
+        cx, cy = self.area.center
+
+        if target:
+            pawn = target.pawn
+
+            pygame.draw.rect(surface, pygame.Color('black'), self.area, 0)
+            pygame.draw.rect(surface, pygame.Color('White'), self.area, 1)
+
+            target.draw(surface, Pt(self.area.centerx - 50, self.area.centery + 20, dir=Dir(1)))
+
+            textsurface = self.font.render(pawn.name, False, pygame.Color('gray'))
+            surface.blit(textsurface, (cx, cy - 45) )
+
+            textsurface = self.font.render(f'{pawn.hp} / {pawn.max_hp}', False, pygame.Color('red'))
+            surface.blit(textsurface, (cx, cy - 15))
+
+            if pawn.max_psi:
+                textsurface = self.font.render(f'{pawn.psi} / {pawn.max_psi}', False, pygame.Color('blue'))
+            else:
+                textsurface = self.font.render(f'-- / --', False, pygame.Color('blue'))
+            surface.blit(textsurface, (cx, cy + 15))
 
 
 class Switch(Widget):

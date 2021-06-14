@@ -3,12 +3,17 @@ from collections import namedtuple
 import battle_logic as bl
 from map_gui import MapGui, Event
 from animations import ScriptWalk, ScriptAttack, ScriptSpin
+from tile_map.data_types.position import Position as Pos
+
 
 class MapScreen:
     def __init__(self, game_window):
         self.gui = MapGui(game_window)
 
     def perform_battle(self, characters, scenario):
+
+        # init
+        self.gui.make_sprites(characters, scenario.npcs)
 
         self.display_intro(scenario)
 
@@ -111,14 +116,22 @@ def record(text, action):
 if __name__ == '__main__':
     # create the screen gui
 
+
+    Char = namedtuple('Char', 'img_key pos pawn')
+    Scenario = namedtuple('Scenario', 'setup map npcs')
+
     # create charaters and npcs
     # in normal game, these would be loaded
-    characters = []
+    characters = [Char('war', Pos(13, 5, d=0), bl.Pawn('Warrior', hp=10, psi=5)),
+                  Char('jen', Pos(11, 4, d=1), bl.Pawn('Jennifer', hp=12))]
 
-    Scenario = namedtuple('Scenario', 'setup map npcs')
     setup = None
     map = None
-    npcs = []
+    npcs = [Char('red', pos, bl.Pawn('Thug', hp=5)) for pos in [Pos(9, 3, d=2),
+                                                                 Pos(12, 3, d=2),
+                                                                 Pos(15, 3, d=2),
+                                                                 Pos(8, 5, d=1),
+                                                                 Pos(16, 5, d=3)]]
     scenario = Scenario(setup, map, npcs)
 
     # TODO move to main_loop

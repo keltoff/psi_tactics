@@ -2,7 +2,7 @@ from enum import Enum, auto
 from math import inf
 import pygame
 from collections import namedtuple
-from widgets import Event, CharacterOrganizer, CharacterDisplay, KeyBinder, MapWrapper
+from widgets import Event, CharacterOrganizer, CharacterDisplay, KeyBinder, MapWrapper, TargetDisplay
 from tile_map.map_display import Display
 from tile_map.map_display import IsoSketch
 from tile_map.map_storage.map_storage import MapSet
@@ -35,22 +35,22 @@ class MapGui:
         map_store.load('data/mapdata.xml')
 
         # sprite_storage = Storage.load('data/graphics_iso.xml')
-        sprite_storage = Storage.load('data/sprites.xml')
+        self.sprite_storage = Storage.load('data/sprites.xml')
 
-        cast = CharacterOrganizer()
-        cast.add_pc(sprite_storage.make_sprite('war', Pos(13, 5, d=0)))
-        cast.add_pc(sprite_storage.make_sprite('jen', Pos(11, 4, d=1)))
-        cast.add_npc(sprite_storage.make_sprite('red', Pos(9, 3, d=2)))
-        cast.add_npc(sprite_storage.make_sprite('red', Pos(12, 3, d=2)))
-        cast.add_npc(sprite_storage.make_sprite('red', Pos(15, 3, d=2)))
-        cast.add_npc(sprite_storage.make_sprite('red', Pos(8, 5, d=1)))
-        cast.add_npc(sprite_storage.make_sprite('red', Pos(16, 5, d=3)))
+        self.cast = CharacterOrganizer()
+        # cast.add_pc(sprite_storage.make_sprite('war', Pos(13, 5, d=0)))
+        # cast.add_pc(sprite_storage.make_sprite('jen', Pos(11, 4, d=1)))
+        # cast.add_npc(sprite_storage.make_sprite('red', Pos(9, 3, d=2)))
+        # cast.add_npc(sprite_storage.make_sprite('red', Pos(12, 3, d=2)))
+        # cast.add_npc(sprite_storage.make_sprite('red', Pos(15, 3, d=2)))
+        # cast.add_npc(sprite_storage.make_sprite('red', Pos(8, 5, d=1)))
+        # cast.add_npc(sprite_storage.make_sprite('red', Pos(16, 5, d=3)))
 
         margin = 20
         rec1 = self.display.get_rect().inflate(-margin, -margin)
 
         self.map = IsoSketch(self.display.subsurface(rec1), map_store['default'], tile_size=30, tilt=60)
-        self.map.sprites = cast.all_characters()
+        # self.map.sprites = cast.all_characters()
         self.map_widget = MapWrapper(self.map)
 
         # self.map.zones.append(Zone(positions=[Pos(13, 4), Pos(13, 5), Pos(14, 4), Pos(14, 5), Pos(15, 4)], color=pygame.Color(0, 255, 0, 50)))
@@ -60,9 +60,11 @@ class MapGui:
         # disp.event_pos = lambda pos, etype, button: print('Event at pos {}'.format(pos)) if etype == pygame.MOUSEBUTTONDOWN else ''
 
 
-        self.char_display = CharacterDisplay(pygame.Rect(margin, h - 100 - margin, 100, 100), cast)
+        self.char_display = CharacterDisplay(pygame.Rect(margin, h - 100 - margin, 100, 100), self.cast)
         # self.acs = ucs.ActionSelect(pygame.Rect(margin + 200, h - bottom_bar + margin, w - 2 * margin, bottom_bar - margin),
         #                       ['Move', 'Beam', 'Close'])
+
+        self.target_display = TargetDisplay(pygame.Rect(w - 200 - margin, h - 100 - margin, 200, 100))
 
         self.cmd_target = None
         self.target_path = Zone([], border=pygame.Color('orange'))
@@ -74,9 +76,23 @@ class MapGui:
         # draw
         self.map_widget.draw(self.display)  #should be part pf Gui
         self.char_display.draw(self.display)
+        self.target_display.draw(self.display)
         # self.acs.draw(self.display)
 
         pygame.display.flip()  # TODO should be part of Window
+
+    def make_sprites(self, pcs, npcs):
+        for pc in pcs:
+            sprite = self.sprite_storage.make_sprite(pc.img_key, pc.pos)
+            sprite.pawn = pc.pawn
+            self.cast.add_pc(sprite)
+
+        for npc in npcs:
+            sprite = self.sprite_storage.make_sprite(npc.img_key, npc.pos)
+            sprite.pawn = npc.pawn
+            self.cast.add_npc(sprite)
+
+        self.map.sprites = self.cast.all_characters()
 
     def get_action(self):
         clock = pygame.time.Clock()
@@ -108,6 +124,8 @@ class MapGui:
                 if hl_event.is_a(MapWrapper.CLICK_LEFT):
                         # TODO display square info
                         self.map_widget.focus(hl_event)
+                        self.target_display.target_pos = hl_event.pos
+                        self.target_display.target = self.cast.sprite_at_pos(hl_event.pos)
                 elif hl_event.is_a(MapWrapper.CLICK_RIGHT):
                     # handle action
                     player = self.char_display.characters.current_pc
@@ -120,6 +138,7 @@ class MapGui:
                             self.cmd_target = None
                             return Event(self.EV_ATTACK, shooter=player, target=target)
                         else:
+                            # self.target_path.positions = Flat4.trace_shot(player.pos, target.pos)
                             self.target_path.positions = Flat4.trace_shot(player.pos, target.pos)
                             self.target_path.border = pygame.Color('red')
                             self.cmd_target = target.pos
