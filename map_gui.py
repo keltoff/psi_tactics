@@ -24,7 +24,7 @@ class MapGui:
     EV_ATTACK = 'Attack'
     EV_TURN_END = 'End'
 
-    def __init__(self, main_display):
+    def __init__(self, main_display, map_file):
         self.display = main_display
 
         # create widgets
@@ -32,19 +32,12 @@ class MapGui:
 
 
         map_store = MapSet()
-        map_store.load('data/mapdata.xml')
+        map_store.load(map_file)
 
         # sprite_storage = Storage.load('data/graphics_iso.xml')
         self.sprite_storage = Storage.load('data/sprites.xml')
 
         self.cast = CharacterOrganizer()
-        # cast.add_pc(sprite_storage.make_sprite('war', Pos(13, 5, d=0)))
-        # cast.add_pc(sprite_storage.make_sprite('jen', Pos(11, 4, d=1)))
-        # cast.add_npc(sprite_storage.make_sprite('red', Pos(9, 3, d=2)))
-        # cast.add_npc(sprite_storage.make_sprite('red', Pos(12, 3, d=2)))
-        # cast.add_npc(sprite_storage.make_sprite('red', Pos(15, 3, d=2)))
-        # cast.add_npc(sprite_storage.make_sprite('red', Pos(8, 5, d=1)))
-        # cast.add_npc(sprite_storage.make_sprite('red', Pos(16, 5, d=3)))
 
         margin = 20
         rec1 = self.display.get_rect().inflate(-margin, -margin)
@@ -146,17 +139,26 @@ class MapGui:
                             player.set_mode('aim')
                     else:
                         # Move
-                        if Pos.same_place(hl_event.pos, self.cmd_target):
+                        if hl_event.pos is None:
+                            self.target_path.positions.clear()
+                            self.cmd_target = None
+                            return hl_event
+
+                        target_pos = hl_event.pos.but(dir=Flat4.dir_to(player.pos, hl_event.pos))
+                        path = Flat4.find_path(player.pos, target_pos, self.map.is_passable)
+                        if path is None:
+                            self.target_path.positions.clear()
+                            self.cmd_target = None
+                            print('Path not possible')
+                            return hl_event
+                        elif Pos.same_place(hl_event.pos, self.cmd_target):
                             self.target_path.positions.clear()
                             self.cmd_target = None
 
-                            target_pos = Position(hl_event.pos.x, hl_event.pos.y, hl_event.pos.z, Flat4.dir_to(player.pos, hl_event.pos))
-                            #TODO should be less clumsy
-
                             return Event(self.EV_MOVE, player=player, pos=hl_event.pos,
-                                         path=Flat4.find_path(player.pos, target_pos))
+                                         path=path)
                         else:
-                            self.target_path.positions = Flat4.find_path(player.pos, hl_event.pos)
+                            self.target_path.positions = path
                             self.target_path.border = pygame.Color('orange') # (255, 150, 0)
                             self.cmd_target = hl_event.pos
                             player.pos.dir = Flat4.dir_to(player.pos, hl_event.pos)

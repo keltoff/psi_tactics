@@ -86,6 +86,14 @@
 		<img key="jen_16_6" rect="(194, 885, 27, 48)" pt="(13, 42)"/>
 		<img key="jen_16_7" rect="(226, 885, 27, 48)" pt="(13, 42)"/>
 	</file>
+    <file path="boxes_small.png" transparent="top_left">
+		<img key="box_plain" rect="(34, 13, 28, 29)" pt="(13, 23)"/>
+		<img key="box_wood" rect="(97, 56, 30, 28)" pt="(14, 22)"/>
+		<img key="box_blue" rect="(2, 99, 28, 28)" pt="(13, 22)"/>
+		<img key="box_red" rect="(98, 99, 28, 28)" pt="(13, 22)"/>
+		<img key="box_green" rect="(2, 142, 29, 28)" pt="(14, 22)"/>
+		<img key="box_purple" rect="(98, 142, 28, 28)" pt="(13, 22)"/>
+	</file>
     <sprite key="war" type="animated">
         <mode>stand</mode>
         <mode>walk</mode>
@@ -242,4 +250,7 @@
             <frame t="200" key="red_hit_r_2" />
         </loop>
     </sprite>
+    <sprite key="box" type="flat" pattern="box_plain" />
+    <sprite key="box_b" type="flat" pattern="box_blue" />
+
 </graphics>

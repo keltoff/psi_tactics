@@ -7,8 +7,8 @@ from tile_map.data_types.position import Position as Pos
 
 
 class MapScreen:
-    def __init__(self, game_window):
-        self.gui = MapGui(game_window)
+    def __init__(self, game_window, map_file):
+        self.gui = MapGui(game_window, map_file)
 
     def perform_battle(self, characters, scenario):
 
@@ -69,14 +69,14 @@ class MapScreen:
                     record('Illegal move', action)
             elif action.is_a(MapGui.EV_ATTACK):
                 if bl.check_attack_legal(action):
-                    shooter = action.player
+                    shooter = action.shooter
                     target = action.target
 
-                    effect = bl.process_attack(shooter, target)
+                    effect = bl.process_attack(shooter.pawn, target.pawn)
 
                     self.gui.play_animation(ScriptAttack(shooter, target, effect))
 
-                    bl.apply_attack(effect, shooter, target)
+                    bl.apply_attack(effect, shooter.pawn, target.pawn)
                 else:
                     record('Illegal attack', action)
             elif action.is_a('quit'):
@@ -122,16 +122,21 @@ if __name__ == '__main__':
 
     # create charaters and npcs
     # in normal game, these would be loaded
-    characters = [Char('war', Pos(13, 5, d=0), bl.Pawn('Warrior', hp=10, psi=5)),
-                  Char('jen', Pos(11, 4, d=1), bl.Pawn('Jennifer', hp=12))]
+    characters = [Char('war', Pos(13, 5, d=0), bl.Pawn('Warrior', hp=10, focus=8, psi=2)),
+                  Char('jen', Pos(11, 4, d=1), bl.Pawn('Jennifer', hp=12, focus=5))]
 
     setup = None
     map = None
-    npcs = [Char('red', pos, bl.Pawn('Thug', hp=5)) for pos in [Pos(9, 3, d=2),
-                                                                 Pos(12, 3, d=2),
-                                                                 Pos(15, 3, d=2),
-                                                                 Pos(8, 5, d=1),
-                                                                 Pos(16, 5, d=3)]]
+    npcs = [Char('red', pos, bl.Pawn('Thug', hp=5, focus=2)) for pos in [Pos(9, 3, d=2),
+                                                                         Pos(12, 3, d=2),
+                                                                         Pos(15, 3, d=2),
+                                                                         Pos(8, 5, d=1),
+                                                                         Pos(16, 5, d=3)]]
+    npcs.extend((Char('box', pos, bl.Pawn('Box', hp=1, focus=0)) for pos in [Pos(10, 4),
+                                                                               Pos(12, 4),
+                                                                               Pos(14, 4),
+                                                                             Pos(10, 5),
+                                                                             Pos(14, 5)]))
     scenario = Scenario(setup, map, npcs)
 
     # TODO move to main_loop
@@ -139,5 +144,6 @@ if __name__ == '__main__':
     pygame.init()
     window = pygame.display.set_mode((800, 700))
 
-    screen = MapScreen(window)
+    # screen = MapScreen(window, map_file='data/mapdata.xml')
+    screen = MapScreen(window, map_file='data/mapdata_flat.xml')
     screen.perform_battle(characters, scenario)

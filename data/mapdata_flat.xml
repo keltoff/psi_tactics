@@ -1,0 +1,46 @@
+<map name="basic">
+    <maps>
+      <floor name="default">
+          <layer name="height" type="int" outside="0">
+            00000000000000000000000
+            00000000000000000000000
+            00000000000000000000000
+            00000000000000000000000
+            00000000000000000000000
+            00000000000000000000000
+            00000000000000000000000
+            00000000000000000000000
+          </layer>
+          <layer name="terrain" type="terrain" outside="x">
+            xxxxxxxxxxxxxxxxxxxxxxx
+            xxxx..............xxxxx
+            xxxx..x........x..xxxxx
+            xxxx______.._______xxxx
+            xxx..............xxxxxx
+            xxx.............xxxxxxx
+            xxx.xxxxxxxxxxx.....xxx
+            xxxxxxxxxxxxxxxxxxxxxxx
+          </layer>
+      </floor>
+    </maps>
+
+    <terrain name="wall"
+             key="x"
+             color="(100, 100, 100)"
+             block_walk="true"
+             block_shoot="true"
+    />
+    <terrain key="."
+             name="free"
+             color="(100, 100, 250)"
+             block_walk="false"
+             block_shoot="false"
+    />
+    <terrain key="_"
+             name="hole"
+             color="(30, 30, 30)"
+             block_walk="true"
+             block_shoot="false"
+    />
+
+</map>

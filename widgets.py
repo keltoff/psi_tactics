@@ -1,6 +1,7 @@
 # from .graphics.sprite import Sprite
 from tile_map.data_types.coords_ex import Pt, Dir
 import pygame
+from itertools import count
 
 
 class Event:
@@ -164,7 +165,7 @@ class TargetDisplay(Widget):
         self.target_pos = None
         self.target = None
 
-        self.font = pygame.font.SysFont('Comic Sans MS', 20)
+        self.font = pygame.font.SysFont('Comic Sans MS', 16)
 
     def draw(self, surface):
         # if self.target_pos is None:
@@ -184,17 +185,20 @@ class TargetDisplay(Widget):
 
             target.draw(surface, Pt(self.area.centerx - 50, self.area.centery + 20, dir=Dir(1)))
 
+            y_steps = (cy - 45 + i * 20 for i in count())
+
             textsurface = self.font.render(pawn.name, False, pygame.Color('gray'))
-            surface.blit(textsurface, (cx, cy - 45) )
+            surface.blit(textsurface, (cx, next(y_steps)) )
 
-            textsurface = self.font.render(f'{pawn.hp} / {pawn.max_hp}', False, pygame.Color('red'))
-            surface.blit(textsurface, (cx, cy - 15))
+            textsurface = self.font.render(str(pawn.hp), False, pygame.Color('red'))
+            surface.blit(textsurface, (cx, next(y_steps)))
 
-            if pawn.max_psi:
-                textsurface = self.font.render(f'{pawn.psi} / {pawn.max_psi}', False, pygame.Color('blue'))
-            else:
-                textsurface = self.font.render(f'-- / --', False, pygame.Color('blue'))
-            surface.blit(textsurface, (cx, cy + 15))
+            textsurface = self.font.render(str(pawn.focus), False, pygame.Color('blue'))
+            surface.blit(textsurface, (cx, next(y_steps)))
+
+            text = str(pawn.psi) if pawn.psi else f'-- / --'
+            textsurface = self.font.render(text, False, pygame.Color('green'))
+            surface.blit(textsurface, (cx, next(y_steps)))
 
 
 class Switch(Widget):
