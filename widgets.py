@@ -33,6 +33,9 @@ class Event:
     def is_a(self, type):
         return self.type == type
 
+    def is_in(self, types):
+        return any(self.is_a(t) for t in types)
+
     @classmethod
     def Empty(cls):
         return Event(None)
