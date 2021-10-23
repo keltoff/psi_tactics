@@ -21,6 +21,8 @@ from tile_map.gui import Gui
 from animations import Script
 from items import build_item_list, build_action_list
 from copy import deepcopy
+from data_structs import FeatureDictionary
+
 
 class CharacterScreen:
     def __init__(self, game_window):
@@ -58,7 +60,7 @@ class CharacterScreen:
                 self.gui.action_panel.load_actions(new_actions)
 
                 # mods = self.update_mods(self.characters.current_pc.mods, items)
-                mods = self.update_mods(dict(), items)
+                mods = self.updated_mods(FeatureDictionary(), items)
                 self.gui.char_stats.load_mods(mods)
             elif action.is_a('quit'):
                 break
@@ -66,26 +68,19 @@ class CharacterScreen:
         # finalize changes
         # possibly persist characters
 
-
     def updated_actions(self, actions, items):
         updated_actions = deepcopy(actions)
         for i in items:
             action = next((a for a in updated_actions if a.key == i.action), None)
             if action:
-                action.allow |= i.action_params.get('allow', False)
-                for key, val in i.action_params.items():
-                    if key != 'allow':
-                        action.stats[key] = val + action.stats.get(key, 0)
-                # action.stats.update(i.action_params)
+                action.stats += i.action_params
 
         return updated_actions
 
-    def update_mods(self, baseline, items):
+    def updated_mods(self, baseline, items):
         updated_mods = deepcopy(baseline)
         for i in items:
-            # updated_mods.update(i.mods)
-            for key, val in i.mods.items():
-                updated_mods[i] = val + updated_mods.get(i, 0)
+            updated_mods += i.mods
 
         return updated_mods
 

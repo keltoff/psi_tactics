@@ -1,4 +1,4 @@
-
+from data_structs import FeatureDictionary
 
 class Item:
     def __init__(self, name, weight=0, mods={}, action=None, **action_params):
@@ -23,11 +23,18 @@ def build_item_list():
 
 
 class Action:
-    def __init__(self, key, name, allow=False, **stats):
+    def __init__(self, key, name, **stats):
         self.key = key
         self.name = name
-        self.stats = stats
-        self.allow = allow
+        self.stats = FeatureDictionary(stats)
+
+    @property
+    def allow(self):
+        return self.stats.get('allow', False)
+
+    @property
+    def stats_display(self):
+        return {k: self.stats[k] for k in self.stats if k != 'allow'}
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and other.key == self.key

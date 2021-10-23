@@ -211,7 +211,7 @@ class ActionPanel(CharacterWidget):
         # super().draw(surface)
 
         for pane_area, action in  _space_in_area_(self.area, self.actions,
-                                                  lambda action: 30 + 20 * len(action.stats),
+                                                  lambda action: 30 + 20 * len(action.stats_display),
                                                   margin=5):
             if action.allow:
                 txt_color = pygame.Color('White')
@@ -221,7 +221,7 @@ class ActionPanel(CharacterWidget):
             pygame.draw.rect(surface, txt_color, pane_area, width=1)
 
             for line, text in _space_in_area_(pane_area,
-                                              [action.name] + [f'    {key}:  {val}' for key, val in action.stats.items()],
+                                              [action.name] + [f'    {key}:  {val}' for key, val in action.stats_display.items()],
                                               item_height=lambda i: 25 if i == action.name else 20):
                 _text_in_area_(text, txt_color, surface, line.inflate(-10, 0))
 
