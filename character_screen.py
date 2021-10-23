@@ -10,7 +10,7 @@ import pygame
 from pygame import Rect
 from collections import namedtuple
 from widgets import Event, CharacterOrganizer, CharacterDisplay, KeyBinder, MapWrapper, TargetDisplay
-from ch_s_widgets import CharacterStats, ItemList, ItemSlots, SkillPanel, SpritePad, CharacterWidget, SlotWidget
+from ch_s_widgets import CharacterStats, ItemList, ItemSlots, SkillPanel, SpritePad, CharacterWidget, SlotWidget, ActionPanel
 from tile_map.map_display import Display
 from tile_map.map_display import IsoSketch
 from tile_map.map_storage.map_storage import MapSet
@@ -19,23 +19,26 @@ from tile_map.data_types.position import Position as Pos
 from tile_map.geometry.topology import *
 from tile_map.gui import Gui
 from animations import Script
-
-
+from items import build_item_list, build_action_list
+from copy import deepcopy
 
 class CharacterScreen:
     def __init__(self, game_window):
         self.gui = CharacterGui(game_window)
         self.characters = CharacterOrganizer()
         self.item_data = []
+        self.action_data = []
 
-    def view_characters(self, characters, item_data):
+    def view_characters(self, characters, item_data, action_data):
 
         for char in characters:
             self.characters.add_pc(char)
 
         self.item_data = item_data
+        self.action_data = action_data
 
         self.gui.item_list.load_items(self.item_data, None)
+        self.gui.action_panel.load_actions(self.action_data)
         self.gui.update_character(self.characters.current_pc)
 
         while True:
@@ -48,23 +51,61 @@ class CharacterScreen:
             elif action.is_a('next_char'):
                 self.characters.next()
                 self.gui.update_character(self.characters.current_pc)
+            elif action.is_a('equip_update'):
+                items = [s.item for s in self.gui.slots.slots if s.item is not None]
+
+                new_actions = self.updated_actions(self.action_data, items)
+                self.gui.action_panel.load_actions(new_actions)
+
+                # mods = self.update_mods(self.characters.current_pc.mods, items)
+                mods = self.update_mods(dict(), items)
+                self.gui.char_stats.load_mods(mods)
             elif action.is_a('quit'):
                 break
 
         # finalize changes
         # possibly persist characters
 
+
+    def updated_actions(self, actions, items):
+        updated_actions = deepcopy(actions)
+        for i in items:
+            action = next((a for a in updated_actions if a.key == i.action), None)
+            if action:
+                action.allow |= i.action_params.get('allow', False)
+                for key, val in i.action_params.items():
+                    if key != 'allow':
+                        action.stats[key] = val + action.stats.get(key, 0)
+                # action.stats.update(i.action_params)
+
+        return updated_actions
+
+    def update_mods(self, baseline, items):
+        updated_mods = deepcopy(baseline)
+        for i in items:
+            # updated_mods.update(i.mods)
+            for key, val in i.mods.items():
+                updated_mods[i] = val + updated_mods.get(i, 0)
+
+        return updated_mods
+
+
 class CharacterGui:
     def __init__(self, display):
         self.display = display
 
         self.char_stats = CharacterStats(area=Rect(50, 100, 200, 200))
-        self.item_list = ItemList(area=Rect(50, 350, 200, 300))
+        # self.item_list = ItemList(area=Rect(50, 350, 200, 300))
         self.sprite_pad = SpritePad(area=Rect(300, 100, 200, 200))
         self.slots = ItemSlots(area=Rect(300, 350, 200, 300))
-        self.skill_panel = SkillPanel(area=Rect(550, 100, 200, 550))
+        # self.skill_panel = SkillPanel(area=Rect(550, 100, 200, 550))
+        self.action_panel = ActionPanel(area=Rect(50, 350, 200, 300))
 
-        self.widgets = [self.char_stats, self.item_list, self.sprite_pad, self.slots, self.skill_panel]
+        # TODO
+        self.item_list = ItemList(area=Rect(550, 100, 200, 550))
+        self.skill_panel = SkillPanel(area=Rect(760, 100, 20, 550))
+
+        self.widgets = [self.char_stats, self.item_list, self.sprite_pad, self.slots, self.skill_panel, self.action_panel]
 
     def _draw_(self):
         self.display.fill((0, 0, 0)) # TODO should be part of Window
@@ -108,10 +149,12 @@ class CharacterGui:
                     pass
                 if hl_event.is_a(ItemSlots.SLOT_CLOSED):
                     pass
+                if hl_event.is_a(ItemSlots.SLOT_CLEAR):
+                    return Event('equip_update', char=self.slots.character)
                 if hl_event.is_a(ItemList.ITEM_SELECTED) and self.slots.open_slot:
                     self.slots.open_slot.item = hl_event.item
                     self.slots.set_open_slot(None)
-                    Event('Equip update', char=self.slots.character)
+                    return Event('equip_update', char=self.slots.character)
 
                 # if hl_event.is_a(SlotWidget.CLICK_LEFT):
                 #     if hl_event.slot.parent is self.item_list:
@@ -129,8 +172,6 @@ class CharacterGui:
                 elif hl_event.is_in(['prev_char', 'next_char', 'quit']):
                     return hl_event
 
-    def transfer_item(self, item, slot):
-        pass
 
 class Character:
     def __init__(self, name, hp, focus, psi, portrait_key, slots=5):
@@ -145,13 +186,16 @@ class Character:
 
         self.skills = []
 
+        self.items = []
+
 
 if __name__ == '__main__':
     # create the screen gui
 
     characters = [Character(name=f'Char {i}', hp=3 + i, focus=10 - i, psi=i, portrait_key='face', slots= 4+i) for i in range(3)]
 
-    items = ['Stunner', 'Grenade', 'Toolkit', 'Shield', 'Smokebomb']
+    items = build_item_list()
+    actions = build_action_list()
 
 
     # TODO move to main_loop
@@ -161,4 +205,4 @@ if __name__ == '__main__':
 
     # screen = MapScreen(window, map_file='data/mapdata.xml')
     screen = CharacterScreen(window)
-    screen.view_characters(characters, item_data=items)
+    screen.view_characters(characters, item_data=items, action_data=actions)

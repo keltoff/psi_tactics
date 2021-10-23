@@ -22,6 +22,10 @@ class CharacterWidget(Widget):
 
 
 class CharacterStats(CharacterWidget):
+    def __init__(self, area):
+        super().__init__(area)
+        self.mods = dict()
+
     def draw(self, surface):
         super().draw(surface)
         # draw portrait
@@ -36,11 +40,20 @@ class CharacterStats(CharacterWidget):
 
         first_col = self.area.copy()
         first_col.width = 80
-        second_col = first_col.move(100, 0)
+        second_col = first_col.move(120, 0)
 
-        for text_block, key in _space_in_area_(self.area, items, margin=10):
-            _text_in_area_(f'{key}:'.rjust(15, ' '), pygame.Color('Gray'), surface, text_block.clip(first_col), right=True)
-            _text_in_area_(f'{items[key]}', pygame.Color('Gray'), surface, text_block.clip(second_col), right=True)
+        # for text_block, key in _space_in_area_(self.area, items, margin=10):
+        #     _text_in_area_(f'{key}:'.rjust(15, ' '), pygame.Color('Gray'), surface, text_block.clip(first_col), right=True)
+        #     _text_in_area_(f'{items[key]}', pygame.Color('Gray'), surface, text_block.clip(second_col), right=True)
+
+        for text_block, key in _space_in_area_(first_col, items, margin=10):
+            _text_in_area_(f'{key}: {items[key]}', pygame.Color('Gray'), surface, text_block)
+
+        for text_block, key in _space_in_area_(second_col, self.mods, margin=10):
+            _text_in_area_(f'{key}: {self.mods[key]}', pygame.Color('Gray'), surface, text_block)
+
+    def load_mods(self, mod_dict):
+        self.mods = mod_dict
 
 
 class SpritePad(CharacterWidget):
@@ -54,16 +67,19 @@ class ItemList(CharacterWidget):
         self.item_slots = []
         self.current_item = None
 
-    def draw(self, surface):
-        super(ItemList, self).draw(surface)
+        self.visible = True
 
-        for s in self.item_slots:
-            s.draw(surface)
+    def draw(self, surface):
+        if self.visible:
+            super(ItemList, self).draw(surface)
+
+            for s in self.item_slots:
+                s.draw(surface)
 
     def translate_event(self, event):
         hl_events = [slot.translate_event(event) for slot in self.item_slots]
         slot_event = next((e for e in hl_events if e is not None), None)
-        if slot_event:
+        if slot_event and self.visible:
             return Event(self.ITEM_SELECTED, item=slot_event.slot.item)
         else:
             return None
@@ -83,6 +99,7 @@ class ItemList(CharacterWidget):
 class ItemSlots(CharacterWidget):
     SLOT_OPENED = 'itemslots_slot_opened'
     SLOT_CLOSED = 'itemslots_slot_closed'
+    SLOT_CLEAR = 'itemslots_slot_clear'
 
     def __init__(self, area):
         super().__init__(area=area)
@@ -114,6 +131,7 @@ class ItemSlots(CharacterWidget):
 
         if slot_event.is_a(SlotWidget.CLICK_RIGHT):
             slot_event.slot.item = None
+            return Event(self.SLOT_CLEAR, slot=slot_event.slot)
 
     def set_open_slot(self, slot):
         self.open_slot = slot
@@ -175,6 +193,47 @@ class SkillPanel(CharacterWidget):
 
     def draw(self, surface):
         super().draw(surface)
+
+
+class ActionPanel(CharacterWidget):
+    ACTION_FOCUSED = 'action_panel_action_focused'
+
+    def __init__(self, area):
+        super().__init__(area)
+        self.actions = []
+        self.action_panes = []
+
+    def char_update(self):
+        # TODO update actions by items
+        pass
+
+    def draw(self, surface):
+        # super().draw(surface)
+
+        for pane_area, action in  _space_in_area_(self.area, self.actions,
+                                                  lambda action: 30 + 20 * len(action.stats),
+                                                  margin=5):
+            if action.allow:
+                txt_color = pygame.Color('White')
+            else:
+                txt_color = pygame.Color('#333333')
+
+            pygame.draw.rect(surface, txt_color, pane_area, width=1)
+
+            for line, text in _space_in_area_(pane_area,
+                                              [action.name] + [f'    {key}:  {val}' for key, val in action.stats.items()],
+                                              item_height=lambda i: 25 if i == action.name else 20):
+                _text_in_area_(text, txt_color, surface, line.inflate(-10, 0))
+
+    def translate_event(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            focused_pane = next((a for a in self.action_panes if a.collide_point(event.pos)), None)
+            if focused_pane:
+                return Event(self.ACTION_FOCUSED, action=focused_pane)
+        return None
+
+    def load_actions(self, actions):
+        self.actions = actions
 
 
 def _space_in_area_(area, items, item_height=None, margin=0):
