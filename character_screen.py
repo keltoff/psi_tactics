@@ -50,23 +50,29 @@ class CharacterScreen:
             if action.is_a('prev_char'):
                 self.characters.prev()
                 self.gui.update_character(self.characters.current_pc)
+                self.update_item_stats()
             elif action.is_a('next_char'):
                 self.characters.next()
                 self.gui.update_character(self.characters.current_pc)
+                self.update_item_stats()
             elif action.is_a('equip_update'):
-                items = [s.item for s in self.gui.slots.slots if s.item is not None]
-
-                new_actions = self.updated_actions(self.action_data, items)
-                self.gui.action_panel.load_actions(new_actions)
-
-                # mods = self.update_mods(self.characters.current_pc.mods, items)
-                mods = self.updated_mods(FeatureDictionary(), items)
-                self.gui.char_stats.load_mods(mods)
+                self.characters.current_pc.items = [s.item for s in self.gui.slots.slots]
+                self.update_item_stats()
             elif action.is_a('quit'):
                 break
 
         # finalize changes
         # possibly persist characters
+
+    def update_item_stats(self):
+        items = [s.item for s in self.gui.slots.slots if s.item is not None]
+
+        new_actions = self.updated_actions(self.action_data, items)
+        self.gui.action_panel.load_actions(new_actions)
+
+        # mods = self.update_mods(self.characters.current_pc.mods, items)
+        mods = self.updated_mods(FeatureDictionary(), items)
+        self.gui.char_stats.load_mods(mods)
 
     def updated_actions(self, actions, items):
         updated_actions = deepcopy(actions)

@@ -150,6 +150,9 @@ class ItemSlots(CharacterWidget):
         # recreate slots
         self.slots = [SlotWidget(area, parent=self) for area, n in _space_in_area_(self.area, range(slot_n), margin=10)]
 
+        for slot, item in zip(self.slots, self.character.items):
+            slot.item = item
+
 class SlotWidget(Widget):
     CLICK_LEFT = 'slot_click_l'
     CLICK_RIGHT = 'slot_click_r'
