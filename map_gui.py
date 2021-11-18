@@ -74,16 +74,24 @@ class MapGui:
 
         pygame.display.flip()  # TODO should be part of Window
 
-    def make_sprites(self, pcs, npcs):
+    def make_sprites(self, pcs, npcs, objects):
         for pc in pcs:
             sprite = self.sprite_storage.make_sprite(pc.img_key, pc.pos)
             sprite.pawn = pc.pawn
             self.cast.add_pc(sprite)
+            pc.sprite = sprite
 
         for npc in npcs:
             sprite = self.sprite_storage.make_sprite(npc.img_key, npc.pos)
             sprite.pawn = npc.pawn
             self.cast.add_npc(sprite)
+            npc.sprite = sprite
+
+        for obj in objects:
+            sprite = self.sprite_storage.make_sprite(obj.img_key, obj.pos)
+            sprite.pawn = obj.pawn
+            self.cast.add_object(sprite)
+            obj.sprite = sprite
 
         self.map.sprites = self.cast.all_characters()
 
@@ -107,9 +115,10 @@ class MapGui:
                                   pygame.K_r: Event('rotate'),
                                   pygame.K_a: Event('pose', mode='aim'),
                                   pygame.K_s: Event('pose', mode='block'),
-                                  pygame.K_d: Event('pose', mode='walk')})
+                                  pygame.K_d: Event('pose', mode='walk'),
+                                  pygame.K_KP_ENTER: Event(MapGui.EV_TURN_END)})
                 hl_events = [w.translate_event(event) for w in [self.char_display, self.map_widget, keys]]
-                hl_event =  next((e for e in hl_events if e is not None), Event.Empty())
+                hl_event = next((e for e in hl_events if e is not None), Event.Empty())
 
                 if hl_event:
                     print(repr(hl_event))
@@ -122,7 +131,7 @@ class MapGui:
                 elif hl_event.is_a(MapWrapper.CLICK_RIGHT):
                     # handle action
                     player = self.char_display.characters.current_pc
-                    target = self.char_display.characters.nps_at_pos(hl_event.pos)
+                    target = self.char_display.characters.npc_at_pos(hl_event.pos)
                     if target:
                         # Attack
                         if Pos.same_place(hl_event.pos, self.cmd_target):
@@ -176,6 +185,8 @@ class MapGui:
                     self.char_display.characters.current_pc.set_mode(hl_event.mode)
                 elif hl_event.is_a('quit'):
                     return hl_event
+                elif hl_event.is_a(MapGui.EV_TURN_END):
+                    return hl_event
 
     def focus(self, object):
         # focus the view on object
@@ -193,6 +204,9 @@ class MapGui:
             animation.update(time_elapsed)
 
             for char in self.char_display.characters.pcs:
+                char.update(time_elapsed)
+
+            for char in self.char_display.characters.npcs:
                 char.update(time_elapsed)
 
 

@@ -48,7 +48,7 @@ class ScriptSpin(Script):
 
     def play_out(self):
         self.actor.set_mode('spin')
-        yield 1000
+        yield 1500
         self.actor.set_mode('stand')
 
 
@@ -60,7 +60,7 @@ class ScriptAttack(Script):
         self.effect = effect
 
     def play_out(self):
-        self.actor.pos.dir = Flat4.dir_to(self.actor.pos, self.target.pos)  # HACK: should not hae to call it here
+        self.actor.pos.dir = Flat4.dir_to(self.actor.pos, self.target.pos)  # HACK: should not have to call it here
         self.actor.set_mode('aim')
 
         yield 500
@@ -73,3 +73,15 @@ class ScriptAttack(Script):
         self.actor.set_mode('stand')
         self.target.set_mode('stand')
         # remove_effect ??
+
+
+class ScriptAim(Script):
+    def __init__(self, actor, target):
+        super().__init__()
+        self.actor = actor
+        self.target = target
+
+    def play_out(self):
+        self.actor.pos.dir = Flat4.dir_to(self.actor.pos, self.target.pos)  # HACK: should not have to call it here
+        self.actor.set_mode('aim')
+        yield 500

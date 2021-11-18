@@ -93,7 +93,7 @@ class MapWrapper(Widget):
             click_pos = self.map.pt_to_pos(event.pos)
             if event.button == 1:  # left
                 return Event(self.CLICK_LEFT, pos=click_pos)
-            elif event.button == 3: # right
+            elif event.button == 3:  # right
                 return Event(self.CLICK_RIGHT, pos=click_pos)
             else:  # other buttons?
                 return None
@@ -105,6 +105,7 @@ class CharacterOrganizer:
     def __init__(self):
         self.pcs = []
         self.npcs = []
+        self.objects = []
         self.current = 0
 
     def add_pc(self, character):
@@ -112,6 +113,9 @@ class CharacterOrganizer:
 
     def add_npc(self, npc):
         self.npcs.append(npc)
+
+    def add_object(self, obj):
+        self.objects.append(obj)
 
     @property
     def current_pc(self):
@@ -130,19 +134,14 @@ class CharacterOrganizer:
         if self.current >= len(self.pcs):
             self.current = 0
 
-    def nps_at_pos(self, pos):
-        return next((npc for npc in self.npcs if npc.pos.same_place(pos)), None)
+    def npc_at_pos(self, pos):
+        return next((npc for npc in self.npcs + self.objects if npc.pos.same_place(pos)), None)
 
     def sprite_at_pos(self, pos):
-        npc = next((npc for npc in self.npcs if npc.pos.same_place(pos)), None)
-        if npc:
-            return npc
-        else:
-            return next((pc for pc in self.pcs if pc.pos.same_place(pos)), None)
-
+        return next((s for s in self.all_characters() if s.pos.same_place(pos)), None)
 
     def all_characters(self):
-        return self.pcs + self.npcs
+        return self.pcs + self.npcs + self.objects
 
 
 class CharacterDisplay(Widget):

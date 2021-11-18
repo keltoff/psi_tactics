@@ -4,6 +4,8 @@ import battle_logic as bl
 from map_gui import MapGui, Event
 from animations import ScriptWalk, ScriptAttack, ScriptSpin
 from tile_map.data_types.position import Position as Pos
+from dataclasses import dataclass
+import npc_ai
 
 
 class MapScreen:
@@ -13,7 +15,7 @@ class MapScreen:
     def perform_battle(self, characters, scenario):
 
         # init
-        self.gui.make_sprites(characters, scenario.npcs)
+        self.gui.make_sprites(characters, scenario.npcs, scenario.objects)
 
         self.display_intro(scenario)
 
@@ -44,7 +46,7 @@ class MapScreen:
         pass
 
     def display_banner(self, text):
-        pass
+        print(text)
 
     def evaluate_status(self):
         results = []
@@ -83,14 +85,13 @@ class MapScreen:
                 done = True
                 return done
 
-
             elif action.is_a(MapGui.EV_TURN_END):
                 self.display_banner('Turn end')
 
                 # refresh characters
-                for char in characters:
-                    char.moved = False
-                    char.acted = False
+                # for char in characters:
+                #     char.moved = False
+                #     char.acted = False
 
                 break
 
@@ -100,10 +101,12 @@ class MapScreen:
     def handle_opfor_turn(self, npcs):
         self.display_banner('Opfor Turn')
 
+        env = npc_ai.Environment(self.gui.map, self.gui.char_display.characters)
+
         for npc in npcs:
-            if npc.visible:
+            if True:  #npc.visible:
                 self.gui.focus(npc)
-                self.gui.play_animation(ScriptSpin(npc))
+                npc.ai.take_turn(self.gui, env)
 
         done = False
         return done
@@ -113,12 +116,21 @@ def record(text, action):
     print(text, repr(action))
 
 
+@dataclass
+class Char:
+    img_key: str
+    pos: Pos
+    pawn: bl.Pawn
+    sprite = None
+    ai = None
+
+
 if __name__ == '__main__':
     # create the screen gui
 
 
-    Char = namedtuple('Char', 'img_key pos pawn')
-    Scenario = namedtuple('Scenario', 'setup map npcs')
+    # Char = namedtuple('Char', 'img_key pos pawn sprite')
+    Scenario = namedtuple('Scenario', 'setup map npcs objects')
 
     # create charaters and npcs
     # in normal game, these would be loaded
@@ -127,17 +139,24 @@ if __name__ == '__main__':
 
     setup = None
     map = None
-    npcs = [Char('red', pos, bl.Pawn('Thug', hp=5, focus=2)) for pos in [Pos(9, 3, d=2),
-                                                                         Pos(12, 3, d=2),
-                                                                         Pos(15, 3, d=2),
-                                                                         Pos(8, 5, d=1),
-                                                                         Pos(16, 5, d=3)]]
-    npcs.extend((Char('box', pos, bl.Pawn('Box', hp=1, focus=0)) for pos in [Pos(10, 4),
-                                                                               Pos(12, 4),
-                                                                               Pos(14, 4),
-                                                                             Pos(10, 5),
-                                                                             Pos(14, 5)]))
-    scenario = Scenario(setup, map, npcs)
+
+    # objects = [Char('box', pos, bl.Pawn('Box', hp=1, focus=0)) for pos in [Pos(10, 4),
+    #                                                                        Pos(12, 4),
+    #                                                                        Pos(14, 4),
+    #                                                                        Pos(10, 5),
+    #                                                                        Pos(14, 5)]]
+    objects = []
+
+    npcs = [Char('red', pos, bl.Pawn('Thug', hp=5, focus=2))
+            for pos in [Pos(9, 3, d=2),
+                        Pos(12, 3, d=2),
+                        Pos(15, 3, d=2),
+                        Pos(8, 5, d=1),
+                        Pos(16, 5, d=3)]]
+    for npc in npcs:
+        npc.ai = npc_ai.TrackTarget(npc)
+
+    scenario = Scenario(setup, map, npcs, objects)
 
     # TODO move to main_loop
     import pygame
