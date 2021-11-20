@@ -3,6 +3,7 @@ from npc_ai import AI
 from tile_map.data_types.position import Position
 from tile_map.graphics.sprite import Sprite, IsoSprite
 from enum import Enum
+import pygame
 
 Role = Enum('Role', 'PC NPC Object')
 
@@ -16,6 +17,7 @@ class Character(Sprite):
         self.sprite = None
         self.pawn = None
         self.ai = None
+        self.banner = None
 
         # char screen facet
         self.slot_count = 5
@@ -50,9 +52,25 @@ class Character(Sprite):
     def draw(self, target, pt):
         self.sprite.draw(target, pt)
 
+        if self.banner:
+            banner_pt = pt - (0, self.sprite.current_loop.frames[0].img.get_height())  # HACK
+
+            cmd, *param = self.banner
+            if cmd == 'countdown':
+                pygame.draw.circle(target, color=pygame.Color('red'), center=banner_pt, radius=10)
+                _text_(str(param[0]), pygame.Color('white'), target, banner_pt)
+            if cmd == 'main':
+                pygame.draw.circle(target, color=pygame.Color('blue'), center=banner_pt, radius=5)
+
     def update(self, time):
         self.sprite.update(time)
 
     def set_mode(self, mode):
         if isinstance(self.sprite, IsoSprite):
             self.sprite.set_mode(mode)
+
+
+_font = pygame.font.SysFont('Comic Sans MS', 16)
+def _text_(text, color, surface, pos):
+    buffer = _font.render(text, False, color)
+    surface.blit(buffer, (pos[0] - buffer.get_width() // 2, pos[1] - buffer.get_height() // 2))

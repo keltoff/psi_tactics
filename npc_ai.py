@@ -60,9 +60,9 @@ class TrackTarget(AI):
 
     def update_banner(self, eta):
         if self.target is None or eta is None:
-            banner = None
+            self.npc.banner = None
         else:
-            banner = 'countdown', eta
+            self.npc.banner = 'countdown', eta
 
     def closest_visible(self, map_data, pcs):
         visible = [pc for pc in pcs if self.trace_shot(map_data, pc.pos)[0]]

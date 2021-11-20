@@ -81,6 +81,7 @@ class MapGui:
             self.cast.add_object(obj)
 
         self.map.sprites = self.cast.all_characters()
+        self.char_display.characters.current_pc.banner = ('main',)
 
     def get_action(self):
         clock = pygame.time.Clock()
@@ -160,11 +161,15 @@ class MapGui:
                             player.pos.dir = Flat4.dir_to(player.pos, hl_event.pos)
                             player.set_mode('stand')
                 elif hl_event.is_a('prev_char'):
+                    self.char_display.characters.current_pc.banner = None
                     self.char_display.characters.prev()
                     self.map_widget.focus(self.char_display.characters.current_pc)
+                    self.char_display.characters.current_pc.banner = ('main',)
                 elif hl_event.is_a('next_char'):
+                    self.char_display.characters.current_pc.banner = None
                     self.char_display.characters.next()
                     self.map_widget.focus(self.char_display.characters.current_pc)
+                    self.char_display.characters.current_pc.banner = ('main',)
                 elif hl_event.is_a('rotate'):
                     self.char_display.characters.current_pc.pos.dir += 1
                     self.char_display.characters.current_pc.set_mode('stand')
