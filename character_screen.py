@@ -22,6 +22,7 @@ from animations import Script
 from items import build_item_list, build_action_list
 from copy import deepcopy
 from data_structs import FeatureDictionary
+from character import Character
 
 
 class CharacterScreen:
@@ -174,26 +175,28 @@ class CharacterGui:
                     return hl_event
 
 
-class Character:
-    def __init__(self, name, hp, focus, psi, portrait_key, slots=5):
-        self.name = name
-        self.hp = hp
-        self.focus = focus
-        self.psi = psi
-        self.portrait = portrait_key
-
-        self.slot_count = slots
-        self.slot_big = 1
-
-        self.skills = []
-
-        self.items = []
+# class Character:
+#     def __init__(self, name, hp, focus, psi, portrait_key, slots=5):
+#         self.name = name
+#         self.hp = hp
+#         self.focus = focus
+#         self.psi = psi
+#         self.portrait = portrait_key
+#
+#         self.slot_count = slots
+#         self.slot_big = 1
+#
+#         self.skills = []
+#
+#         self.items = []
 
 
 if __name__ == '__main__':
     # create the screen gui
 
-    characters = [Character(name=f'Char {i}', hp=3 + i, focus=10 - i, psi=i, portrait_key='face', slots= 4+i) for i in range(3)]
+    characters = [Character.build(name=f'Char {i}', hp=3 + i, focus=10 - i, psi=i,
+                                  slots=4+i)
+                  for i in range(3)]
 
     items = build_item_list()
     actions = build_action_list()

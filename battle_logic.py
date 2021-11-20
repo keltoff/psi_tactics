@@ -57,6 +57,7 @@ class Action:
     def is_a(self, action_type):
         return isinstance(self, action_type)
 
+
 @dataclass
 class Attack(Action):
     player: Character

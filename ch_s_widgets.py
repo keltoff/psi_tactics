@@ -32,10 +32,10 @@ class CharacterStats(CharacterWidget):
         # print stats
         # TODO tooltips?
 
-        items = {'Name': self.character.name,
-                 'HP': self.character.hp,
-                 'Focus': self.character.focus,
-                 'Psi': self.character.psi,
+        items = {'Name': self.character.pawn.name,
+                 'HP': self.character.pawn.hp.max,
+                 'Focus': self.character.pawn.focus.max,
+                 'Psi': self.character.pawn.psi,
                  }
 
         first_col = self.area.copy()
