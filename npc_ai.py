@@ -41,6 +41,7 @@ class TrackTarget(AI):
                 self.target = None
                 self.aim = 0
                 self.update_banner(None)
+                self.npc.sprite.set_mode('stand')
             else:
                 self.aim += 1
                 self.update_banner(difficulty - self.aim)
@@ -64,10 +65,9 @@ class TrackTarget(AI):
             banner = 'countdown', eta
 
     def closest_visible(self, map_data, pcs):
-        visible = [self.trace_shot(map_data, pc.pos)[0] for pc in pcs]
-        distances = [Flat4.distance(self.npc.pos, pc.pos) for pc in pcs]
-
-        return next((pc for pc, v, dist in zip(pcs, visible, distances) if v and dist == min(distances)), None)
+        visible = [pc for pc in pcs if self.trace_shot(map_data, pc.pos)[0]]
+        by_distance = sorted(visible, key=lambda pc: Flat4.distance(self.npc.pos, pc.pos))
+        return next(iter(by_distance), None)
 
     def trace_shot(self, map_data, target_pos):
         path = Flat4.trace_shot(self.npc.pos, target_pos)
