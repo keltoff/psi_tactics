@@ -6,7 +6,6 @@ from widgets import Event, CharacterOrganizer, CharacterDisplay, KeyBinder, MapW
 from tile_map.map_display import Display
 from tile_map.map_display import IsoSketch
 from tile_map.map_storage.map_storage import MapSet
-from tile_map.graphics.storage import Storage
 from tile_map.data_types.position import Position as Pos
 from tile_map.geometry.topology import *
 from tile_map.gui import Gui
@@ -33,9 +32,6 @@ class MapGui:
 
         map_store = MapSet()
         map_store.load(map_file)
-
-        # sprite_storage = Storage.load('data/graphics_iso.xml')
-        self.sprite_storage = Storage.load('data/sprites.xml')
 
         self.cast = CharacterOrganizer()
 
@@ -74,24 +70,15 @@ class MapGui:
 
         pygame.display.flip()  # TODO should be part of Window
 
-    def make_sprites(self, pcs, npcs, objects):
+    def load_sprites_in_map(self, pcs, npcs, objects):
         for pc in pcs:
-            sprite = self.sprite_storage.make_sprite(pc.img_key, pc.pos)
-            sprite.pawn = pc.pawn
-            self.cast.add_pc(sprite)
-            pc.sprite = sprite
+            self.cast.add_pc(pc)
 
         for npc in npcs:
-            sprite = self.sprite_storage.make_sprite(npc.img_key, npc.pos)
-            sprite.pawn = npc.pawn
-            self.cast.add_npc(sprite)
-            npc.sprite = sprite
+            self.cast.add_npc(npc)
 
         for obj in objects:
-            sprite = self.sprite_storage.make_sprite(obj.img_key, obj.pos)
-            sprite.pawn = obj.pawn
-            self.cast.add_object(sprite)
-            obj.sprite = sprite
+            self.cast.add_object(obj)
 
         self.map.sprites = self.cast.all_characters()
 

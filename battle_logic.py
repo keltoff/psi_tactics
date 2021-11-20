@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from tile_map.data_types.position import Position as Pos
 
 
 class Stat:
@@ -51,9 +51,6 @@ class Character(Pawn):
         self.visible = True
 
 
-class Pos:
-    pass
-
 # Event classes
 @dataclass
 class Action:
@@ -62,7 +59,7 @@ class Action:
 
 @dataclass
 class Attack(Action):
-    player : Character
+    player: Character
     target: Character
 
 
@@ -74,6 +71,7 @@ class Move(Action):
 
 def check_move_legal(action):
     return True
+
 
 def check_attack_legal(action):
     return True

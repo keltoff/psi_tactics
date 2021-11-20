@@ -6,6 +6,8 @@ from animations import ScriptWalk, ScriptAttack, ScriptSpin
 from tile_map.data_types.position import Position as Pos
 from dataclasses import dataclass
 import npc_ai
+from character import Character, Role
+from tile_map.graphics.storage import Storage
 
 
 class MapScreen:
@@ -15,7 +17,7 @@ class MapScreen:
     def perform_battle(self, characters, scenario):
 
         # init
-        self.gui.make_sprites(characters, scenario.npcs, scenario.objects)
+        self.gui.load_sprites_in_map(characters, scenario.npcs, scenario.objects)
 
         self.display_intro(scenario)
 
@@ -128,35 +130,33 @@ class Char:
 if __name__ == '__main__':
     # create the screen gui
 
+    # sprite_storage = Storage.load('data/graphics_iso.xml')
+    store = Storage.load('data/sprites.xml')
 
-    # Char = namedtuple('Char', 'img_key pos pawn sprite')
     Scenario = namedtuple('Scenario', 'setup map npcs objects')
 
     # create charaters and npcs
     # in normal game, these would be loaded
-    characters = [Char('war', Pos(13, 5, d=0), bl.Pawn('Warrior', hp=10, focus=8, psi=2)),
-                  Char('jen', Pos(11, 4, d=1), bl.Pawn('Jennifer', hp=12, focus=5))]
+    characters = [Character.build(name='Warrior', hp=10, focus=8, psi=2,
+                                  sprite=store.make_sprite('war', Pos(13, 5, d=0)), role=Role.PC),
+                  Character.build(name='Jennifer', hp=12, focus=5,
+                                  sprite=store.make_sprite('jen', Pos(11, 4, d=1)), role=Role.PC)
+                  ]
 
-    setup = None
-    map = None
+    objects = [Character.build(name='Box', hp=1, focus=0,
+                               sprite=store.make_sprite('box', pos), role=Role.Object)
+               for pos in [Pos(10, 4), Pos(12, 4), Pos(14, 4), Pos(10, 5), Pos(14, 5)]]
 
-    # objects = [Char('box', pos, bl.Pawn('Box', hp=1, focus=0)) for pos in [Pos(10, 4),
-    #                                                                        Pos(12, 4),
-    #                                                                        Pos(14, 4),
-    #                                                                        Pos(10, 5),
-    #                                                                        Pos(14, 5)]]
-    objects = []
-
-    npcs = [Char('red', pos, bl.Pawn('Thug', hp=5, focus=2))
+    npcs = [Character.build(name='Thug', hp=5, focus=2, ai_class=npc_ai.TrackTarget,
+                            sprite=store.make_sprite('red', pos), role=Role.NPC)
             for pos in [Pos(9, 3, d=2),
-                        Pos(12, 3, d=2),
                         Pos(15, 3, d=2),
                         Pos(8, 5, d=1),
                         Pos(16, 5, d=3)]]
-    for npc in npcs:
-        npc.ai = npc_ai.TrackTarget(npc)
+    npcs.append(Character.build(name='Lenny', hp=5, focus=2, ai_class=npc_ai.Spin,
+                                sprite=store.make_sprite('red', Pos(12, 3, d=2)), role=Role.NPC))
 
-    scenario = Scenario(setup, map, npcs, objects)
+    scenario = Scenario(setup=None, map=None, npcs=npcs, objects=objects)
 
     # TODO move to main_loop
     import pygame

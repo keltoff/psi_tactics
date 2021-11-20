@@ -19,7 +19,7 @@ class AI:
 
 class Spin(AI):
     def take_turn(self, gui, environment: Environment):
-        gui.play_animation(ani.ScriptSpin(self.npc.sprite))
+        gui.play_animation(ani.ScriptSpin(self.npc))
 
 
 class TrackTarget(AI):
@@ -33,7 +33,7 @@ class TrackTarget(AI):
         if self.target is None:
             self.target = self.closest_visible(environment.map, environment.characters.pcs)
             if self.target is not None:
-                gui.play_animation(ani.ScriptAim(self.npc.sprite, self.target))
+                gui.play_animation(ani.ScriptAim(self.npc, self.target))
 
         if self.target is not None:
             los, difficulty = self.trace_shot(environment.map, self.target.pos)
@@ -48,7 +48,7 @@ class TrackTarget(AI):
                 if self.aim >= difficulty:
                     # do shot
                     effect = None  # TODO perform attack
-                    gui.play_animation(ani.ScriptAttack(self.npc.sprite, self.target, effect))
+                    gui.play_animation(ani.ScriptAttack(self.npc, self.target, effect))
 
                     self.target = None
                     self.aim = 0
