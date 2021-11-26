@@ -26,6 +26,9 @@ class Character(Sprite):
         self.items = []
         # self.portrait = 'face'
 
+    def __str__(self):
+        return self.pawn.name
+
     @classmethod
     def build(cls, sprite: Sprite = None, ai_class=None, role: Role = None, slots=5, **kwargs):
         char = Character()
@@ -39,6 +42,13 @@ class Character(Sprite):
         # char
         char.slot_count = slots
 
+        return char
+
+    @classmethod
+    def dialog(cls, name, portrait=None, sprite=None):
+        char = Character()
+        char.pawn = Pawn(name, 0, 0)
+        char.sprite = sprite
         return char
 
     @property

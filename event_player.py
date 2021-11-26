@@ -3,7 +3,6 @@ from math import inf
 import pygame
 from collections import namedtuple
 
-import animations
 from widgets import Event, CharacterOrganizer, CharacterDisplay, KeyBinder, MapWrapper, TargetDisplay, Widget
 from tile_map.map_display import Display
 from tile_map.map_display import IsoSketch
@@ -11,8 +10,6 @@ from tile_map.map_storage.map_storage import MapSet
 from tile_map.data_types.position import Position as Pos
 from tile_map.geometry.topology import *
 import animations as ani
-from tile_map.gui import Gui
-
 
 from enum import Enum, auto
 from collections import namedtuple
@@ -20,9 +17,8 @@ import battle_logic as bl
 from map_gui import MapGui, Event
 from animations import ScriptWalk, ScriptAttack, ScriptSpin
 from tile_map.data_types.position import Position as Pos
-from dataclasses import dataclass
 import npc_ai
-# from character import Character, Role
+from character import Character, Role
 from tile_map.graphics.storage import Storage
 from tile_map.graphics.sprite import Sprite
 from functools import singledispatchmethod
@@ -77,7 +73,6 @@ class EventScreen:
 
     @singledispatchmethod
     def say(self, character, text):
-        # print(f'[{character}]: \"{text}\"')
         self.dialog.set(text, character=character)
 
         self.get_action()
@@ -86,7 +81,6 @@ class EventScreen:
 
     @say.register
     def _(self, text: str):
-        # print(text)
         self.say(None, text)
 
     def set_scene(self, map_file, characters, focus):
@@ -114,7 +108,6 @@ class EventScreen:
         self.dialog.draw(self.display)
 
         pygame.display.flip()  # TODO should be part of Window
-
 
     def get_action(self):
         clock = pygame.time.Clock()
@@ -149,43 +142,6 @@ class EventScreen:
             for s in self.map.sprites:
                 s.update(time_elapsed)
 
-            # for char in self.cast.pcs:
-            #     char.update(time_elapsed)
-            #
-            # for char in self.cast.npcs:
-            #     char.update(time_elapsed)
-
-
-@dataclass()
-class Character:
-    name: str
-    portrait: Sprite
-    sprite: Sprite
-
-    def __init__(self, name, portrait, sprite):
-        self.name = name
-        self.sprite = sprite
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def pos(self):
-        return self.sprite.pos
-
-    @pos.setter
-    def pos(self, value):
-        self.sprite.pos = value
-
-    def draw(self, surface, s_pt):
-        self.sprite.draw(surface, s_pt)
-
-    def update(self, elapsed_time):
-        self.sprite.update(elapsed_time)
-
-    def set_mode(self, mode):
-        self.sprite.set_mode(mode)
-
 
 def chat_event(set_scene, say, play):
     # def set_scene(**kwargs): pass
@@ -196,8 +152,8 @@ def chat_event(set_scene, say, play):
     face_store = {'face_alice': None,
                   'face_bob': None}
 
-    alice = Character(name='Alice', portrait=face_store['face_alice'], sprite=store.make_sprite('jen', Pos(5, 5, d=1)))
-    bob = Character(name='Bob', portrait=face_store['face_bob'], sprite=store.make_sprite('war', Pos(20, 5, d=3)))
+    alice = Character.dialog(name='Alice', portrait=face_store['face_alice'], sprite=store.make_sprite('jen', Pos(5, 5, d=1)))
+    bob = Character.dialog(name='Bob', portrait=face_store['face_bob'], sprite=store.make_sprite('war', Pos(20, 5, d=3)))
 
     set_scene(map_file='data/mapdata_flat.xml', characters=[alice, bob], focus=Pos(13, 5))
     topology = Flat4

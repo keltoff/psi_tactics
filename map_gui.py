@@ -12,12 +12,6 @@ from tile_map.gui import Gui
 from animations import Script
 
 
-class MapGuiEvents(Enum):
-    PlayerMoved = auto()
-    Attack = auto()
-    TurnEnd = auto()
-
-
 class MapGui:
     EV_MOVE = 'Move'
     EV_ATTACK = 'Attack'
