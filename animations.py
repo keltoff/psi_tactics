@@ -85,3 +85,15 @@ class ScriptAim(Script):
         self.actor.pos.dir = Flat4.dir_to(self.actor.pos, self.target.pos)  # HACK: should not have to call it here
         self.actor.set_mode('aim')
         yield 500
+
+
+class Simultaneously(Script):
+    def __init__(self, *items):
+        self.scripts = items
+
+    def update(self, time):
+        for s in self.scripts:
+            s.update(time)
+
+    def done(self):
+        return all(s.done() for s in self.scripts)
